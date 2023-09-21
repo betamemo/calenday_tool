@@ -49,5 +49,10 @@ def get_cal_year(y):
 
 year = datetime.now().year + 1
 print('Calendar ', year)
-this_year = get_cal_year(year)
-print(this_year)
+next_year = get_cal_year(year)
+print(next_year)
+
+year = input('Enter year: ')
+print('Calendar ', year)
+other_year = get_cal_year(int(year))
+print(other_year)
