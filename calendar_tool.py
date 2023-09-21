@@ -47,7 +47,7 @@ def get_cal_year(y):
             print('\t'.join(month[i]))
 
 
-year = 2023
+year = datetime.now().year + 1
 print('Calendar ', year)
 this_year = get_cal_year(year)
 print(this_year)
