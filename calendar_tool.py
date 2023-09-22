@@ -1,39 +1,31 @@
 from datetime import datetime, timedelta
 
 
-def get_cal_month(y, m, n):
+def get_cal_month(y, m, n, is_sunday):
     dt = datetime(y, m, 1)
     month = [[], [], [], [], [], [], []]
     month_str = ''
-
-    mon = month[0]
-    mon.append('Mon:')
-
-    tue = month[1]
-    tue.append('Tue:')
-
-    wed = month[2]
-    wed.append('Wed:')
-
-    thu = month[3]
-    thu.append('Thu:')
-
-    fri = month[4]
-    fri.append('Fri:')
-
-    sat = month[5]
-    sat.append('Sat:')
-
-    sun = month[6]
-    sun.append('Sun:')
-
     m_temp = m
     padding_temp = 8
 
+    # Add weekday name
+    wd_name = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    if is_sunday:
+        wd_name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+    for i in range(len(wd_name)):
+        d = month[i]
+        d.append(wd_name[i])
+
     for x in range(n):
+        wd = dt.weekday()
+        if is_sunday:
+            if wd == 6:
+                wd = 0
+            else:
+                wd = wd + 1
 
         # Add padding before day 1
-        wd = dt.weekday()
         if wd > 0:
             for i in range(wd):
                 this_weekday = month[i]
@@ -44,7 +36,14 @@ def get_cal_month(y, m, n):
 
         # Add day in month
         while dt.month == m_temp:
-            this_weekday = month[dt.weekday()]
+            wd = dt.weekday()
+            if is_sunday:
+                if wd == 6:
+                    wd = 0
+                else:
+                    wd = wd + 1
+
+            this_weekday = month[wd]
             this_weekday.append(str(dt.day))
             dt = dt + timedelta(days=1)
         m_temp = dt.month
@@ -60,10 +59,10 @@ def get_cal_month(y, m, n):
     return month
 
 
-def get_cal_year(y, n):
+def get_cal_year(y, n, is_sunday):
     m = 1
     while 1 <= m <= 12:
-        month = get_cal_month(y, m, n)
+        month = get_cal_month(y, m, n, is_sunday)
         for i in range(len(month)):
             print('\t'.join(month[i]))
         m = m + n
@@ -85,9 +84,15 @@ def get_cal_year(y, n):
 year = input('Enter year: ')
 month_number = input('How many months to display in a single row (1, 2, or 3)?: ')
 month_number = int(month_number)
+is_sunday = input('Is Sunday (y/n)?: ')
+
 if month_number < 1:
     print('Should greater than or equal 1')
 elif month_number > 3:
     print('Should less than or equal 3')
 else:
-    get_cal_year(int(year), month_number)
+    if is_sunday == 'y':
+        is_sunday = True
+    else:
+        is_sunday = False
+    get_cal_year(int(year), month_number, is_sunday)
